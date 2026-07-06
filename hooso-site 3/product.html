@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>開瓶器吊飾客製化 — hoo'so</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.44.0/iconfont/tabler-icons.min.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="index.html">
+      <div class="logo">hoo'so</div>
+      <span class="logo-sub">行動名片專賣店</span>
+    </a>
+    <nav class="nav-links">
+      <a href="index.html">首頁</a>
+      <a href="index.html#products">商品</a>
+      <a href="index.html#about">品牌故事</a>
+    </nav>
+    <div class="header-icons">
+      <a href="cart.html" class="cart-icon">
+        <i class="ti ti-shopping-bag" aria-hidden="true"></i>
+        <span id="cart-count" class="cart-count" style="display:none;">0</span>
+      </a>
+      <button class="mobile-menu-btn" aria-label="選單"><i class="ti ti-menu-2" aria-hidden="true"></i></button>
+    </div>
+  </div>
+</header>
+
+<div class="breadcrumb"><a href="index.html">首頁</a> / 開瓶器吊飾</div>
+
+<div class="product-detail">
+  <div>
+    <div class="product-gallery-main" id="galleryMain"><i class="ti ti-bottle" aria-hidden="true"></i></div>
+    <div class="product-gallery-thumbs">
+      <div class="product-thumb active"><i class="ti ti-bottle" aria-hidden="true"></i></div>
+      <div class="product-thumb"><i class="ti ti-wifi" aria-hidden="true"></i></div>
+      <div class="product-thumb"><i class="ti ti-stamp" aria-hidden="true"></i></div>
+      <div class="product-thumb"><i class="ti ti-palette" aria-hidden="true"></i></div>
+    </div>
+  </div>
+
+  <div>
+    <h1 class="pd-title">美甲友善開瓶器吊飾</h1>
+    <p class="pd-subtitle">開瓶器 × 吊飾 × NFC行動名片，可客製化LOGO與顏色</p>
+    <div class="pd-price" id="pdPrice">NT$280</div>
+
+    <div class="option-group">
+      <div class="option-label">加購項目 <span class="option-hint">STEP 1</span></div>
+      <div class="variant-options" id="variantOptions">
+        <button class="variant-btn selected" data-variant="basic" data-price="280">
+          <strong>純開瓶器</strong>
+          <span>NT$280</span>
+        </button>
+        <button class="variant-btn" data-variant="logo" data-price="380">
+          <strong>開瓶器 + LOGO</strong>
+          <span>NT$380</span>
+        </button>
+        <button class="variant-btn" data-variant="nfc" data-price="450">
+          <strong>開瓶器 + NFC</strong>
+          <span>NT$450</span>
+        </button>
+        <button class="variant-btn" data-variant="logo_nfc" data-price="550">
+          <strong>開瓶器 + LOGO + NFC</strong>
+          <span>NT$550</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="option-group">
+      <div class="option-label">顏色 <span class="option-hint">STEP 2</span></div>
+      <div style="display:flex;gap:20px;margin-bottom:16px;">
+        <label style="font-size:13px;display:flex;align-items:center;gap:6px;">
+          <input type="radio" name="colorMode" value="solid" checked> 整體單色
+        </label>
+        <label style="font-size:13px;display:flex;align-items:center;gap:6px;">
+          <input type="radio" name="colorMode" value="two-tone"> 本體＋字體混搭
+        </label>
+      </div>
+
+      <div id="solidColorPicker" class="color-options">
+        <div class="color-swatch-wrap">
+          <span class="color-swatch selected" style="background:#0A0A0A;" data-color="black"></span>
+          <div class="color-swatch-label">黑</div>
+        </div>
+        <div class="color-swatch-wrap">
+          <span class="color-swatch" style="background:#FAFAFA;border:1px solid #ddd;" data-color="white"></span>
+          <div class="color-swatch-label">白</div>
+        </div>
+        <div class="color-swatch-wrap">
+          <span class="color-swatch" style="background:#C9A0AA;" data-color="pink"></span>
+          <div class="color-swatch-label">粉</div>
+        </div>
+        <div class="color-swatch-wrap">
+          <span class="color-swatch" style="background:#B8BCC2;" data-color="silver"></span>
+          <div class="color-swatch-label">銀</div>
+        </div>
+      </div>
+
+      <div id="twoToneColorPicker" style="display:none;">
+        <div style="margin-bottom:20px;">
+          <label style="font-size:12px;color:var(--gray-500);display:block;margin-bottom:10px;">本體顏色</label>
+          <div class="color-options" data-role="body">
+            <div class="color-swatch-wrap">
+              <span class="color-swatch two-tone-swatch selected" style="background:#0A0A0A;" data-target="body" data-color="black"></span>
+              <div class="color-swatch-label">黑</div>
+            </div>
+            <div class="color-swatch-wrap">
+              <span class="color-swatch two-tone-swatch" style="background:#FAFAFA;border:1px solid #ddd;" data-target="body" data-color="white"></span>
+              <div class="color-swatch-label">白</div>
+            </div>
+            <div class="color-swatch-wrap">
+              <span class="color-swatch two-tone-swatch" style="background:#C9A0AA;" data-target="body" data-color="pink"></span>
+              <div class="color-swatch-label">粉</div>
+            </div>
+            <div class="color-swatch-wrap">
+              <span class="color-swatch two-tone-swatch" style="background:#B8BCC2;" data-target="body" data-color="silver"></span>
+              <div class="color-swatch-label">銀</div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <label style="font-size:12px;color:var(--gray-500);display:block;margin-bottom:10px;">字體顏色</label>
+          <div class="color-options" data-role="text">
+            <div class="color-swatch-wrap">
+              <span class="color-swatch two-tone-swatch selected" style="background:#FAFAFA;border:1px solid #ddd;" data-target="text" data-color="white"></span>
+              <div class="color-swatch-label">白</div>
+            </div>
+            <div class="color-swatch-wrap">
+              <span class="color-swatch two-tone-swatch" style="background:#0A0A0A;" data-target="text" data-color="black"></span>
+              <div class="color-swatch-label">黑</div>
+            </div>
+            <div class="color-swatch-wrap">
+              <span class="color-swatch two-tone-swatch" style="background:#C9A0AA;" data-target="text" data-color="pink"></span>
+              <div class="color-swatch-label">粉</div>
+            </div>
+            <div class="color-swatch-wrap">
+              <span class="color-swatch two-tone-swatch" style="background:#B8BCC2;" data-target="text" data-color="silver"></span>
+              <div class="color-swatch-label">銀</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="option-group" id="logoUploadGroup" style="display:none;">
+      <div class="option-label">上傳你的LOGO <span class="option-hint">STEP 3</span></div>
+      <label class="custom-upload-zone" for="logoInput">
+        <i class="ti ti-upload" aria-hidden="true"></i>
+        <p id="logoUploadText">點擊上傳圖片檔（建議PNG透明背景）</p>
+        <input type="file" id="logoInput" accept="image/*">
+      </label>
+    </div>
+
+    <div class="option-group" id="nfcGroup" style="display:none;">
+      <div class="option-label">NFC 連結網址 <span class="option-hint">STEP 4</span></div>
+      <input type="text" class="form-input" id="nfcUrlInput" placeholder="例如：instagram.com/你的帳號">
+      <p class="form-hint">手機輕觸商品時，會開啟這個連結（可放 IG / LINE 官方帳號 / LinkTree 等）</p>
+    </div>
+
+    <div class="option-group">
+      <div class="option-label">數量</div>
+      <div class="qty-control" style="width:fit-content;">
+        <button onclick="changeQty(-1)" aria-label="減少數量">−</button>
+        <span id="qtyDisplay">1</span>
+        <button onclick="changeQty(1)" aria-label="增加數量">+</button>
+      </div>
+    </div>
+
+    <button class="btn btn-dark btn-block" style="font-size:15px;padding:16px;" onclick="handleAddToCart()">
+      加入購物車 · <span id="btnPrice">NT$280</span>
+    </button>
+    <p class="form-hint" style="text-align:center;margin-top:12px;">支援 LINE Pay ／ 信用卡 ／ Apple Pay</p>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-bottom" style="border-top:none;padding-top:0;">
+    <span>© 2026 hoo'so. All rights reserved.</span>
+    <a href="index.html" style="color:var(--white);">回首頁</a>
+  </div>
+</footer>
+
+<script src="js/cart.js"></script>
+<script>
+let state = {
+  variant: 'basic',
+  price: 280,
+  colorMode: 'solid',
+  color: 'black',
+  bodyColor: 'black',
+  textColor: 'white',
+  qty: 1,
+  logoUploaded: false,
+  nfcUrl: ''
+};
+
+const galleryIcons = {
+  basic: 'ti-bottle',
+  logo: 'ti-stamp',
+  nfc: 'ti-wifi',
+  logo_nfc: 'ti-crown'
+};
+
+document.querySelectorAll('.variant-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.variant-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    state.variant = btn.dataset.variant;
+    state.price = parseInt(btn.dataset.price, 10);
+    updatePriceDisplay();
+    updateVisibleOptions();
+    document.getElementById('galleryMain').innerHTML = `<i class="ti ${galleryIcons[state.variant]}" aria-hidden="true"></i>`;
+  });
+});
+
+document.querySelectorAll('input[name="colorMode"]').forEach(radio => {
+  radio.addEventListener('change', (e) => {
+    state.colorMode = e.target.value;
+    document.getElementById('solidColorPicker').style.display = state.colorMode === 'solid' ? 'flex' : 'none';
+    document.getElementById('twoToneColorPicker').style.display = state.colorMode === 'two-tone' ? 'grid' : 'none';
+  });
+});
+
+document.querySelectorAll('.color-swatch:not(.two-tone-swatch)').forEach(sw => {
+  sw.addEventListener('click', () => {
+    document.querySelectorAll('.color-swatch:not(.two-tone-swatch)').forEach(s => s.classList.remove('selected'));
+    sw.classList.add('selected');
+    state.color = sw.dataset.color;
+  });
+});
+
+document.querySelectorAll('.two-tone-swatch').forEach(sw => {
+  sw.addEventListener('click', () => {
+    const target = sw.dataset.target;
+    document.querySelectorAll(`.two-tone-swatch[data-target="${target}"]`).forEach(s => s.classList.remove('selected'));
+    sw.classList.add('selected');
+    if (target === 'body') {
+      state.bodyColor = sw.dataset.color;
+    } else {
+      state.textColor = sw.dataset.color;
+    }
+  });
+});
+
+document.getElementById('logoInput').addEventListener('change', (e) => {
+  if (e.target.files && e.target.files[0]) {
+    state.logoUploaded = true;
+    document.getElementById('logoUploadText').textContent = '已上傳：' + e.target.files[0].name;
+  }
+});
+
+document.getElementById('nfcUrlInput').addEventListener('input', (e) => {
+  state.nfcUrl = e.target.value;
+});
+
+function updateVisibleOptions() {
+  const needsLogo = state.variant === 'logo' || state.variant === 'logo_nfc';
+  const needsNfc = state.variant === 'nfc' || state.variant === 'logo_nfc';
+  document.getElementById('logoUploadGroup').style.display = needsLogo ? 'block' : 'none';
+  document.getElementById('nfcGroup').style.display = needsNfc ? 'block' : 'none';
+}
+
+function updatePriceDisplay() {
+  const total = state.price * state.qty;
+  document.getElementById('pdPrice').textContent = 'NT$' + state.price.toLocaleString('zh-TW');
+  document.getElementById('btnPrice').textContent = 'NT$' + total.toLocaleString('zh-TW');
+}
+
+function changeQty(delta) {
+  state.qty = Math.max(1, state.qty + delta);
+  document.getElementById('qtyDisplay').textContent = state.qty;
+  updatePriceDisplay();
+}
+
+function handleAddToCart() {
+  const needsLogo = state.variant === 'logo' || state.variant === 'logo_nfc';
+  const needsNfc = state.variant === 'nfc' || state.variant === 'logo_nfc';
+
+  if (needsLogo && !state.logoUploaded) {
+    alert('請先上傳你的LOGO圖片');
+    return;
+  }
+  if (needsNfc && !state.nfcUrl.trim()) {
+    alert('請填寫NFC要連結的網址');
+    return;
+  }
+
+  addToCart({
+    variant: state.variant,
+    price: state.price,
+    qty: state.qty,
+    colorMode: state.colorMode,
+    color: state.color,
+    bodyColor: state.bodyColor,
+    textColor: state.textColor,
+    logoUploaded: state.logoUploaded,
+    nfcUrl: state.nfcUrl
+  });
+
+  window.location.href = 'cart.html';
+}
+
+updateVisibleOptions();
+</script>
+</body>
+</html>

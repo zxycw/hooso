@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>購物車 — hoo'so</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.44.0/iconfont/tabler-icons.min.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="index.html">
+      <div class="logo">hoo'so</div>
+      <span class="logo-sub">行動名片專賣店</span>
+    </a>
+    <nav class="nav-links">
+      <a href="index.html">首頁</a>
+      <a href="index.html#products">商品</a>
+      <a href="index.html#about">品牌故事</a>
+    </nav>
+    <div class="header-icons">
+      <a href="cart.html" class="cart-icon">
+        <i class="ti ti-shopping-bag" aria-hidden="true"></i>
+        <span id="cart-count" class="cart-count" style="display:none;">0</span>
+      </a>
+      <button class="mobile-menu-btn" aria-label="選單"><i class="ti ti-menu-2" aria-hidden="true"></i></button>
+    </div>
+  </div>
+</header>
+
+<div class="cart-page">
+  <h1 class="cart-title">購物車</h1>
+
+  <div class="cart-layout">
+    <div>
+      <div id="cart-items-container"></div>
+      <div id="cart-empty-state" class="empty-cart" style="display:none;">
+        <i class="ti ti-shopping-bag-off" aria-hidden="true"></i>
+        <p>購物車還是空的</p>
+        <a href="product.html" class="btn btn-dark">去選購商品</a>
+      </div>
+    </div>
+
+    <div id="cart-summary-box" class="cart-summary">
+      <div class="summary-row"><span>小計</span><span id="summary-subtotal">NT$0</span></div>
+      <div class="summary-row"><span>運費</span><span id="summary-shipping">NT$80</span></div>
+      <div class="summary-total"><span>合計</span><span id="summary-total">NT$0</span></div>
+      <a href="checkout.html" class="btn btn-dark btn-block">前往結帳</a>
+      <div class="payment-icons">
+        <span>LINE Pay</span>
+        <span>信用卡</span>
+        <span>Apple Pay</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-bottom" style="border-top:none;padding-top:0;">
+    <span>© 2026 hoo'so. All rights reserved.</span>
+    <a href="index.html" style="color:var(--white);">回首頁</a>
+  </div>
+</footer>
+
+<script src="js/cart.js"></script>
+<script>renderCartPage();</script>
+</body>
+</html>
