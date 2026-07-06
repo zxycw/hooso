@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>結帳 — hoo'so</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.44.0/iconfont/tabler-icons.min.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="index.html">
+      <div class="logo">hoo'so</div>
+      <span class="logo-sub">行動名片專賣店</span>
+    </a>
+    <div class="header-icons">
+      <a href="cart.html" style="font-size:13px;">返回購物車</a>
+    </div>
+  </div>
+</header>
+
+<div class="cart-page" style="max-width:640px;">
+  <h1 class="cart-title">結帳資訊</h1>
+
+  <div class="option-group">
+    <div class="option-label">收件人資訊</div>
+    <div style="display:grid;gap:12px;">
+      <input class="form-input" placeholder="姓名" id="custName">
+      <input class="form-input" placeholder="手機號碼" id="custPhone">
+      <input class="form-input" placeholder="Email" id="custEmail">
+      <input class="form-input" placeholder="收件地址 / 或超商店名" id="custAddress">
+    </div>
+  </div>
+
+  <div class="option-group">
+    <div class="option-label">付款方式</div>
+    <div style="display:grid;gap:10px;">
+      <label class="variant-btn" style="display:flex;align-items:center;gap:10px;cursor:pointer;">
+        <input type="radio" name="payMethod" value="linepay" checked style="width:auto;">
+        <i class="ti ti-brand-line" aria-hidden="true"></i>
+        <div><strong>LINE Pay</strong><br><span>使用LINE掃碼付款</span></div>
+      </label>
+      <label class="variant-btn" style="display:flex;align-items:center;gap:10px;cursor:pointer;">
+        <input type="radio" name="payMethod" value="ecpay" style="width:auto;">
+        <i class="ti ti-credit-card" aria-hidden="true"></i>
+        <div><strong>信用卡 / Apple Pay</strong><br><span>由綠界金流處理</span></div>
+      </label>
+    </div>
+  </div>
+
+  <div id="orderSummary" style="background:#F7F6F2;border-radius:12px;padding:20px;margin-bottom:24px;"></div>
+
+  <button class="btn btn-dark btn-block" style="font-size:15px;padding:16px;" onclick="handleCheckout()">確認送出訂單</button>
+
+  <p class="form-hint" style="text-align:center;margin-top:16px;">
+    目前此頁面為結帳流程預覽，實際金流串接（LINE Pay / 綠界）需要後端服務處理，尚未正式連接付款系統。
+  </p>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-bottom" style="border-top:none;padding-top:0;">
+    <span>© 2026 hoo'so. All rights reserved.</span>
+  </div>
+</footer>
+
+<script src="js/cart.js"></script>
+<script>
+function renderSummary() {
+  const cart = getCart();
+  const total = getCartTotal();
+  const shipping = total >= 1000 ? 0 : 80;
+  document.getElementById('orderSummary').innerHTML = `
+    <div class="summary-row"><span>共 ${getCartCount()} 件商品</span><span>${formatPrice(total)}</span></div>
+    <div class="summary-row"><span>運費</span><span>${shipping === 0 ? '免運' : formatPrice(shipping)}</span></div>
+    <div class="summary-total"><span>應付金額</span><span>${formatPrice(total + shipping)}</span></div>
+  `;
+}
+
+function handleCheckout() {
+  const name = document.getElementById('custName').value.trim();
+  const phone = document.getElementById('custPhone').value.trim();
+  if (!name || !phone) {
+    alert('請填寫姓名與手機號碼');
+    return;
+  }
+  const method = document.querySelector('input[name="payMethod"]:checked').value;
+  alert('這是流程預覽 — 實際會導向 ' + (method === 'linepay' ? 'LINE Pay' : '綠界') + ' 付款頁面。金流串接完成後這裡會正式生效。');
+}
+
+renderSummary();
+</script>
+</body>
+</html>
