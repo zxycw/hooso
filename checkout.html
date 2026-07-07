@@ -35,6 +35,27 @@
   </div>
 
   <div class="option-group">
+    <div class="option-label">送貨方式</div>
+    <div style="display:grid;gap:10px;">
+      <label class="variant-btn" style="display:flex;align-items:center;gap:10px;cursor:pointer;">
+        <input type="radio" name="shipMethod" value="home" checked style="width:auto;">
+        <i class="ti ti-truck-delivery" aria-hidden="true"></i>
+        <div><strong>宅配到家</strong><br><span>黑貓/新竹物流，送到府上</span></div>
+      </label>
+      <label class="variant-btn" style="display:flex;align-items:center;gap:10px;cursor:pointer;">
+        <input type="radio" name="shipMethod" value="cvs_prepaid" style="width:auto;">
+        <i class="ti ti-building-store" aria-hidden="true"></i>
+        <div><strong>超商取貨付款</strong><br><span>7-11 / 全家，貨到超商付現</span></div>
+      </label>
+      <label class="variant-btn" style="display:flex;align-items:center;gap:10px;cursor:pointer;">
+        <input type="radio" name="shipMethod" value="cvs_paid" style="width:auto;">
+        <i class="ti ti-building-store" aria-hidden="true"></i>
+        <div><strong>超商取貨不付款</strong><br><span>7-11 / 全家，先線上付款</span></div>
+      </label>
+    </div>
+  </div>
+
+  <div class="option-group">
     <div class="option-label">付款方式</div>
     <div style="display:grid;gap:10px;">
       <label class="variant-btn" style="display:flex;align-items:center;gap:10px;cursor:pointer;">
@@ -43,12 +64,23 @@
         <div><strong>LINE Pay</strong><br><span>使用LINE掃碼付款</span></div>
       </label>
       <label class="variant-btn" style="display:flex;align-items:center;gap:10px;cursor:pointer;">
+        <input type="radio" name="payMethod" value="applepay" style="width:auto;">
+        <i class="ti ti-brand-apple" aria-hidden="true"></i>
+        <div><strong>Apple Pay</strong><br><span>iPhone用戶快速付款</span></div>
+      </label>
+      <label class="variant-btn" style="display:flex;align-items:center;gap:10px;cursor:pointer;">
+        <input type="radio" name="payMethod" value="atm" style="width:auto;">
+        <i class="ti ti-building-bank" aria-hidden="true"></i>
+        <div><strong>銀行轉帳 / ATM</strong><br><span>取號後至ATM或網銀轉帳</span></div>
+      </label>
+      <label class="variant-btn" style="display:flex;align-items:center;gap:10px;cursor:pointer;">
         <input type="radio" name="payMethod" value="ecpay" style="width:auto;">
         <i class="ti ti-credit-card" aria-hidden="true"></i>
-        <div><strong>信用卡 / Apple Pay</strong><br><span>由綠界金流處理</span></div>
+        <div><strong>信用卡付款</strong><br><span>由綠界金流處理</span></div>
       </label>
     </div>
   </div>
+
 
   <div id="orderSummary" style="background:#F7F6F2;border-radius:12px;padding:20px;margin-bottom:24px;"></div>
 
@@ -86,7 +118,8 @@ function handleCheckout() {
     return;
   }
   const method = document.querySelector('input[name="payMethod"]:checked').value;
-  alert('這是流程預覽 — 實際會導向 ' + (method === 'linepay' ? 'LINE Pay' : '綠界') + ' 付款頁面。金流串接完成後這裡會正式生效。');
+  const methodNames = { linepay: 'LINE Pay', applepay: 'Apple Pay', atm: '銀行轉帳/ATM', ecpay: '信用卡付款' };
+  alert('這是流程預覽 — 實際會導向 ' + methodNames[method] + ' 付款頁面。金流串接完成後這裡會正式生效。');
 }
 
 renderSummary();
