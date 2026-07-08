@@ -34,12 +34,12 @@
 
 <div class="product-detail">
   <div>
-    <div class="product-gallery-main" id="galleryMain"><i class="ti ti-bottle" aria-hidden="true"></i></div>
+    <div class="product-gallery-main" id="galleryMain"><img id="mainImg" src="images/product-plain-black.jpg" alt="美甲友善開瓶器吊飾"></div>
     <div class="product-gallery-thumbs">
-      <div class="product-thumb active"><i class="ti ti-bottle" aria-hidden="true"></i></div>
-      <div class="product-thumb"><i class="ti ti-wifi" aria-hidden="true"></i></div>
-      <div class="product-thumb"><i class="ti ti-stamp" aria-hidden="true"></i></div>
-      <div class="product-thumb"><i class="ti ti-palette" aria-hidden="true"></i></div>
+      <div class="product-thumb active" data-img="images/product-plain-black.jpg"><img src="images/product-plain-black.jpg" alt="黑色 純色款"></div>
+      <div class="product-thumb" data-img="images/product-logo-black.jpg"><img src="images/product-logo-black.jpg" alt="黑色 LOGO款"></div>
+      <div class="product-thumb" data-img="images/product-logo-pink.jpg"><img src="images/product-logo-pink.jpg" alt="粉色 LOGO款"></div>
+      <div class="product-thumb" data-img="images/product-logo-white.jpg"><img src="images/product-logo-white.jpg" alt="白色 LOGO款"></div>
     </div>
   </div>
 
@@ -198,12 +198,38 @@ let state = {
   nfcUrl: ''
 };
 
-const galleryIcons = {
-  basic: 'ti-bottle',
-  logo: 'ti-stamp',
-  nfc: 'ti-wifi',
-  logo_nfc: 'ti-crown'
+const productImages = {
+  'basic_black': 'images/product-plain-black.jpg',
+  'logo_black': 'images/product-logo-black.jpg',
+  'logo_pink': 'images/product-logo-pink.jpg',
+  'logo_white': 'images/product-logo-white.jpg',
+  'nfc_black': 'images/product-logo-black.jpg',
+  'nfc_pink': 'images/product-logo-pink.jpg',
+  'nfc_white': 'images/product-logo-white.jpg',
+  'logo_nfc_black': 'images/product-logo-black.jpg',
+  'logo_nfc_pink': 'images/product-logo-pink.jpg',
+  'logo_nfc_white': 'images/product-logo-white.jpg'
 };
+
+function updateMainImage() {
+  if (state.colorMode !== 'solid') return;
+  const key = state.variant + '_' + state.color;
+  const src = productImages[key];
+  if (src) {
+    document.getElementById('mainImg').src = src;
+    document.querySelectorAll('.product-thumb').forEach(t => {
+      t.classList.toggle('active', t.dataset.img === src);
+    });
+  }
+}
+
+document.querySelectorAll('.product-thumb').forEach(thumb => {
+  thumb.addEventListener('click', () => {
+    document.querySelectorAll('.product-thumb').forEach(t => t.classList.remove('active'));
+    thumb.classList.add('active');
+    document.getElementById('mainImg').src = thumb.dataset.img;
+  });
+});
 
 document.querySelectorAll('.variant-btn').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -213,7 +239,7 @@ document.querySelectorAll('.variant-btn').forEach(btn => {
     state.price = parseInt(btn.dataset.price, 10);
     updatePriceDisplay();
     updateVisibleOptions();
-    document.getElementById('galleryMain').innerHTML = `<i class="ti ${galleryIcons[state.variant]}" aria-hidden="true"></i>`;
+    updateMainImage();
   });
 });
 
@@ -222,6 +248,7 @@ document.querySelectorAll('input[name="colorMode"]').forEach(radio => {
     state.colorMode = e.target.value;
     document.getElementById('solidColorPicker').style.display = state.colorMode === 'solid' ? 'flex' : 'none';
     document.getElementById('twoToneColorPicker').style.display = state.colorMode === 'two-tone' ? 'grid' : 'none';
+    updateMainImage();
   });
 });
 
@@ -230,6 +257,7 @@ document.querySelectorAll('.color-swatch:not(.two-tone-swatch)').forEach(sw => {
     document.querySelectorAll('.color-swatch:not(.two-tone-swatch)').forEach(s => s.classList.remove('selected'));
     sw.classList.add('selected');
     state.color = sw.dataset.color;
+    updateMainImage();
   });
 });
 
