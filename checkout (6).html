@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>結帳 — hoo'so</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.44.0/iconfont/tabler-icons.min.css">
+<style>
+  /* 結帳頁專用：讓 variant-btn 可以整張卡片點選，原生 radio 保留但不顯示 */
+  .checkout-choice { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+  .checkout-choice input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  .checkout-choice i { font-size: 20px; }
+  .checkout-form-grid { display: grid; gap: 12px; }
+  .order-summary-rows { margin-bottom: 20px; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="index.html">
+      <div class="logo">hoo'so</div>
+      <span class="logo-sub">行動名片專賣店</span>
+    </a>
+    <div class="header-icons">
+      <a href="cart.html" style="font-size:13px;">返回購物車</a>
+    </div>
+  </div>
+</header>
+
+<div class="cart-page">
+  <h1 class="cart-title">結帳資訊</h1>
+
+  <div class="cart-layout">
+    <div>
+      <div class="option-group">
+        <div class="option-label">收件人資訊</div>
+        <div class="checkout-form-grid">
+          <input class="form-input" placeholder="姓名" id="custName">
+          <input class="form-input" placeholder="手機號碼" id="custPhone">
+          <input class="form-input" placeholder="Email" id="custEmail">
+          <input class="form-input" placeholder="收件地址 / 或超商店名" id="custAddress">
+        </div>
+      </div>
+
+      <div class="option-group">
+        <div class="option-label">送貨方式</div>
+        <div class="checkout-form-grid">
+          <label class="variant-btn checkout-choice selected" data-group="shipMethod">
+            <input type="radio" name="shipMethod" value="home" checked>
+            <i class="ti ti-truck-delivery" aria-hidden="true"></i>
+            <div class="option-copy"><strong>宅配到家</strong><br><span>黑貓/新竹物流，送到府上</span></div>
+          </label>
+          <label class="variant-btn checkout-choice" data-group="shipMethod">
+            <input type="radio" name="shipMethod" value="cvs_711">
+            <i class="ti ti-building-store" aria-hidden="true"></i>
+            <div class="option-copy"><strong>7-11 取貨</strong><br><span>線上付款完成，送至指定門市</span></div>
+          </label>
+          <label class="variant-btn checkout-choice" data-group="shipMethod">
+            <input type="radio" name="shipMethod" value="cvs_family">
+            <i class="ti ti-building-store" aria-hidden="true"></i>
+            <div class="option-copy"><strong>全家 取貨</strong><br><span>線上付款完成，送至指定門市</span></div>
+          </label>
+        </div>
+
+        <div id="storePickerBox" style="display:none;margin-top:12px;">
+          <button type="button" class="btn btn-outline" style="color:var(--black);border-color:var(--border-color-dark);" id="pickStoreBtn" onclick="openCvsMap()">選擇取貨門市</button>
+          <div id="selectedStoreInfo" style="margin-top:10px;font-size:13px;color:var(--gray-500);"></div>
+        </div>
+      </div>
+
+      <div class="option-group">
+        <div class="option-label">付款方式</div>
+        <div class="checkout-form-grid">
+          <label class="variant-btn checkout-choice" data-group="payMethod">
+            <input type="radio" name="payMethod" value="linepay">
+            <i class="ti ti-brand-line" aria-hidden="true"></i>
+            <div class="option-copy"><strong>LINE Pay</strong><br><span>尚未開放，敬請期待</span></div>
+          </label>
+          <label class="variant-btn checkout-choice selected" data-group="payMethod">
+            <input type="radio" name="payMethod" value="ecpay" checked>
+            <i class="ti ti-credit-card" aria-hidden="true"></i>
+            <div class="option-copy"><strong>信用卡 / ATM / Apple Pay</strong><br><span>由綠界金流處理，跳轉後可選擇實際付款方式</span></div>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="cart-summary">
+      <div id="orderSummary" class="order-summary-rows"></div>
+      <button class="btn btn-dark btn-block" id="checkoutBtn" onclick="handleCheckout()">確認送出訂單</button>
+      <p class="form-hint" style="text-align:center;margin-top:12px;">
+        送出後會導向綠界付款頁面，請在同一個分頁完成付款，勿關閉瀏覽器。
+      </p>
+    </div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-bottom" style="border-top:none;padding-top:0;">
+    <span>© 2026 hoo'so. All rights reserved.</span>
+  </div>
+</footer>
+
+<script src="js/cart.js"></script>
+<script>
+// 你的 Apps Script 網頁應用程式網址（結帳用）
+const CHECKOUT_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxKherkkpSqZcWZeIiRSp7CsJUD8G1622fhpH1Waojh2pKG4PJVi4RvXnW-RE0-TTw3/exec';
+
+// 如果這個分頁其實是「選店地圖」跳出來的彈出視窗被導回來的結果，
+// 就把選到的門市資料傳回原本的結帳分頁，然後自己關掉，不要往下跑正常頁面邏輯
+(function checkIfCvsPopupReturn() {
+  const qs = new URLSearchParams(location.search);
+  if (qs.get('cvsPopupReturn') === '1' && window.opener) {
+    window.opener.postMessage({
+      type: 'hoosoCvsMapSelected',
+      storeID: qs.get('cvsStoreID') || '',
+      storeName: qs.get('cvsStoreName') || '',
+      address: qs.get('cvsAddress') || '',
+    }, '*');
+    window.close();
+  }
+})();
+
+let selectedStore = null;
+
+// 讓每組 radio 選項像 product.html 一樣，點選整張卡片會切換 selected 樣式
+document.querySelectorAll('.checkout-choice').forEach(label => {
+  label.addEventListener('click', () => {
+    const group = label.dataset.group;
+    document.querySelectorAll(`.checkout-choice[data-group="${group}"]`).forEach(el => {
+      el.classList.remove('selected');
+    });
+    label.classList.add('selected');
+    label.querySelector('input[type="radio"]').checked = true;
+    if (group === 'shipMethod') {
+      updateStorePickerVisibility();
+    }
+  });
+});
+
+function updateStorePickerVisibility() {
+  const shipMethod = document.querySelector('input[name="shipMethod"]:checked').value;
+  const box = document.getElementById('storePickerBox');
+  if (shipMethod === 'cvs_711' || shipMethod === 'cvs_family') {
+    box.style.display = 'block';
+  } else {
+    box.style.display = 'none';
+    selectedStore = null;
+    document.getElementById('selectedStoreInfo').textContent = '';
+  }
+}
+
+function fetchLogisticsConfig() {
+  return new Promise((resolve, reject) => {
+    const callbackName = 'hoosoLogisticsCb_' + Date.now();
+    const script = document.createElement('script');
+    window[callbackName] = (data) => {
+      delete window[callbackName];
+      script.remove();
+      resolve(data);
+    };
+    script.onerror = () => {
+      delete window[callbackName];
+      script.remove();
+      reject(new Error('無法取得物流設定'));
+    };
+    script.src = CHECKOUT_ENDPOINT + '?action=logisticsConfig&callback=' + callbackName;
+    document.body.appendChild(script);
+  });
+}
+
+async function openCvsMap() {
+  const shipMethod = document.querySelector('input[name="shipMethod"]:checked').value;
+  const subType = shipMethod === 'cvs_711' ? 'UNIMART' : 'FAMI';
+
+  const btn = document.getElementById('pickStoreBtn');
+  btn.disabled = true;
+  btn.textContent = '準備地圖中...';
+
+  try {
+    const config = await fetchLogisticsConfig();
+    const mapParams = new URLSearchParams({
+      MerchantID: config.merchantID,
+      MerchantTradeNo: 'MAP' + Date.now(),
+      LogisticsType: 'CVS',
+      LogisticsSubType: subType,
+      IsCollection: 'N',
+      ServerReplyURL: CHECKOUT_ENDPOINT,
+    });
+    window.open(config.mapURL + '?' + mapParams.toString(), 'hoosoCvsMap', 'width=480,height=680');
+  } catch (err) {
+    alert('開啟門市地圖失敗，請稍後再試一次');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '選擇取貨門市';
+  }
+}
+
+window.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'hoosoCvsMapSelected') {
+    selectedStore = {
+      storeID: event.data.storeID,
+      storeName: event.data.storeName,
+      address: event.data.address,
+    };
+    document.getElementById('selectedStoreInfo').innerHTML =
+      `已選擇：<strong>${selectedStore.storeName}</strong><br>${selectedStore.address}`;
+  }
+});
+
+function renderSummary() {
+  const cart = getCart();
+  const total = getCartTotal();
+  const shipping = total >= 1000 ? 0 : 80;
+  document.getElementById('orderSummary').innerHTML = `
+    <div class="summary-row"><span>共 ${getCartCount()} 件商品</span><span>${formatPrice(total)}</span></div>
+    <div class="summary-row"><span>運費</span><span>${shipping === 0 ? '免運' : formatPrice(shipping)}</span></div>
+    <div class="summary-total"><span>應付金額</span><span>${formatPrice(total + shipping)}</span></div>
+  `;
+}
+
+// 把單一購物車項目組成一段給綠界看的商品說明文字
+function buildItemLabel(item) {
+  const variantLabel = VARIANT_LABELS[item.variant] || item.variant;
+  let colorLabel = '';
+  if (item.colorMode === 'solid') {
+    colorLabel = COLOR_LABELS[item.color] || item.color;
+  } else if (item.colorMode === 'two-tone') {
+    colorLabel = `本體${COLOR_LABELS[item.bodyColor] || ''}字${COLOR_LABELS[item.textColor] || ''}`;
+  }
+  const qty = item.qty || 1;
+  return `hoo'so${variantLabel}${colorLabel} x${qty}`;
+}
+
+function generateOrderId() {
+  // HOOSO + 13碼時間戳，英數字，20字內，綠界要求唯一值
+  return 'HOOSO' + Date.now();
+}
+
+function fetchOrderParamsViaJsonp(params) {
+  return new Promise((resolve, reject) => {
+    const callbackName = 'hoosoCheckoutCb_' + Date.now();
+    const script = document.createElement('script');
+
+    const cleanup = () => {
+      delete window[callbackName];
+      script.remove();
+    };
+
+    window[callbackName] = (data) => {
+      cleanup();
+      resolve(data);
+    };
+
+    script.onerror = () => {
+      cleanup();
+      reject(new Error('無法連上結帳伺服器'));
+    };
+
+    params.set('callback', callbackName);
+    script.src = CHECKOUT_ENDPOINT + '?' + params.toString();
+    document.body.appendChild(script);
+  });
+}
+
+async function handleCheckout() {
+  const name = document.getElementById('custName').value.trim();
+  const phone = document.getElementById('custPhone').value.trim();
+  const email = document.getElementById('custEmail').value.trim();
+  const address = document.getElementById('custAddress').value.trim();
+
+  if (!name || !phone) {
+    alert('請填寫姓名與手機號碼');
+    return;
+  }
+
+  const cart = getCart();
+  if (cart.length === 0) {
+    alert('購物車是空的');
+    return;
+  }
+
+  const payMethod = document.querySelector('input[name="payMethod"]:checked').value;
+  const shipMethod = document.querySelector('input[name="shipMethod"]:checked').value;
+  const isCvs = shipMethod === 'cvs_711' || shipMethod === 'cvs_family';
+
+  if (isCvs && !selectedStore) {
+    alert('請先選擇取貨門市');
+    return;
+  }
+  if (!isCvs && !address) {
+    alert('請填寫收件地址');
+    return;
+  }
+
+  if (payMethod === 'linepay') {
+    alert('LINE Pay 尚未開放，請選擇「信用卡 / ATM / Apple Pay」付款');
+    return;
+  }
+
+  const total = getCartTotal();
+  const shipping = total >= 1000 ? 0 : 80;
+  const amount = total + shipping;
+  const itemName = cart.map(buildItemLabel).join('#');
+  const orderId = generateOrderId();
+
+  const btn = document.getElementById('checkoutBtn');
+  btn.disabled = true;
+  btn.textContent = '正在建立訂單...';
+
+  const params = new URLSearchParams({
+    orderId: orderId,
+    amount: String(amount),
+    itemName: itemName,
+    custName: name,
+    custPhone: phone,
+    custEmail: email,
+    custAddress: isCvs ? (selectedStore.address || '') : address,
+    shipMethod: shipMethod,
+    payMethod: payMethod,
+    cvsStoreID: isCvs ? selectedStore.storeID : '',
+    cvsStoreName: isCvs ? selectedStore.storeName : '',
+    cvsAddress: isCvs ? selectedStore.address : '',
+  });
+
+  try {
+    const data = await fetchOrderParamsViaJsonp(params);
+
+    // 訂單已經記成待付款，這裡先清空購物車，避免使用者返回上一頁重複下單
+    saveCart([]);
+
+    // 在這一頁自己組表單、自己送出 → POST 到綠界付款頁
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = data.serviceURL;
+    Object.keys(data.params).forEach(key => {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = key;
+      input.value = data.params[key];
+      form.appendChild(input);
+    });
+    document.body.appendChild(form);
+    form.submit();
+  } catch (err) {
+    alert('建立訂單失敗，請稍後再試一次（' + err.message + '）');
+    btn.disabled = false;
+    btn.textContent = '確認送出訂單';
+  }
+}
+
+renderSummary();
+</script>
+</body>
+</html>
