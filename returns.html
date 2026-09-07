@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>退換貨政策 — hoo'so</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.44.0/iconfont/tabler-icons.min.css">
+<style>
+  .policy-page { max-width: 720px; margin: 0 auto; padding: 48px 24px 80px; }
+  .policy-page h2 { font-family: var(--font-display); font-weight: 700; font-size: 18px; margin: 32px 0 12px; }
+  .policy-page h2:first-of-type { margin-top: 0; }
+  .policy-page p, .policy-page li { font-size: 14px; color: var(--gray-500); line-height: 1.9; }
+  .policy-page ul { padding-left: 20px; margin: 8px 0; }
+  .policy-note { background: #F7F6F2; border-radius: 10px; padding: 18px 20px; margin: 24px 0; font-size: 13px; color: var(--gray-700); }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="index.html">
+      <div class="logo">hoo'so</div>
+      <span class="logo-sub">行動名片專賣店</span>
+    </a>
+    <nav class="nav-links">
+      <a href="index.html">首頁</a>
+      <a href="index.html#products">商品</a>
+      <a href="index.html#about">品牌故事</a>
+    </nav>
+    <div class="header-icons">
+      <a href="cart.html" class="cart-icon">
+        <i class="ti ti-shopping-bag" aria-hidden="true"></i>
+        <span id="cart-count" class="cart-count" style="display:none;">0</span>
+      </a>
+      <button class="mobile-menu-btn" aria-label="選單"><i class="ti ti-menu-2" aria-hidden="true"></i></button>
+    </div>
+  </div>
+</header>
+
+<div class="breadcrumb"><a href="index.html">首頁</a> / 退換貨政策</div>
+
+<div class="policy-page">
+  <h1 class="cart-title" style="margin-bottom:8px;">退換貨政策</h1>
+  <p>hoo'so 所有商品皆為收到訂單後依照客戶選擇的顏色、刻字內容個別客製化製作，請於送出訂單前仔細確認顏色、刻字文字是否正確。</p>
+
+  <div class="policy-note">
+    根據消費者保護法相關規定，客製化（依消費者需求指定規格）商品不適用網路購物七天猶豫期之退貨規定。以下說明適用於 hoo'so 商品的退換貨情形。
+  </div>
+
+  <h2>可以退換貨的情況</h2>
+  <p>若發生以下情形，請於<strong>收到商品後 7 天內</strong>與我們聯絡，我們會協助免費更換或退款：</p>
+  <ul>
+    <li>商品有明顯的生產瑕疵（例如破損、缺件、NFC 功能完全無法感應）</li>
+    <li>實際收到的顏色、刻字內容與你下單時選擇的不符（屬於我們的製作疏失）</li>
+    <li>運送過程中造成的損壞（請保留外包裝與商品照片以利判斷）</li>
+  </ul>
+  <p>聯絡時請提供訂單編號，以及商品狀況的清楚照片，我們會盡快回覆處理方式。</p>
+
+  <h2>不適用退換貨的情況</h2>
+  <ul>
+    <li>因個人喜好改變（不喜歡顏色、不想要了）而要求退貨 — 商品已依你當初選擇的規格客製化生產，無法比照一般非客製商品辦理猶豫期退貨</li>
+    <li>下單時自行選錯顏色或刻字內容打錯字，商品已進入生產或已完成製作</li>
+    <li>商品已配戴使用一段時間後，因日常使用產生的自然磨損或刮痕</li>
+    <li>因高溫、泡水等不當使用方式造成的損壞（詳見常見問題頁面的保養說明）</li>
+  </ul>
+
+  <h2>如何申請</h2>
+  <p>請透過頁尾的 Email 或 LINE 官方帳號與我們聯絡，並提供以下資訊：</p>
+  <ul>
+    <li>訂單編號</li>
+    <li>問題說明與商品照片</li>
+    <li>希望的處理方式（更換 / 退款）</li>
+  </ul>
+  <p>確認符合退換貨條件後，我們會告知寄回或後續處理的方式。若對政策內容有疑問，也歡迎在下單前先與我們聯絡確認。</p>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-bottom" style="border-top:none;padding-top:0;">
+    <span>© 2026 hoo'so. All rights reserved.</span>
+    <a href="index.html" style="color:var(--white);">回首頁</a>
+  </div>
+</footer>
+
+<script src="js/cart.js"></script>
+<script>document.addEventListener('DOMContentLoaded', updateCartBadge);</script>
+</body>
+</html>
