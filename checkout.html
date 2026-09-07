@@ -149,7 +149,7 @@ function generateOrderId() {
   return 'HOOSO' + Date.now();
 }
 
-function handleCheckout() {
+async function handleCheckout() {
   const name = document.getElementById('custName').value.trim();
   const phone = document.getElementById('custPhone').value.trim();
   const email = document.getElementById('custEmail').value.trim();
@@ -182,7 +182,7 @@ function handleCheckout() {
 
   const btn = document.getElementById('checkoutBtn');
   btn.disabled = true;
-  btn.textContent = '正在導向付款頁面...';
+  btn.textContent = '正在建立訂單...';
 
   const params = new URLSearchParams({
     orderId: orderId,
@@ -196,10 +196,32 @@ function handleCheckout() {
     payMethod: payMethod,
   });
 
-  // 訂單已經記成待付款，這裡先清空購物車，避免使用者返回上一頁重複下單
-  saveCart([]);
+  try {
+    const res = await fetch(CHECKOUT_ENDPOINT + '?' + params.toString());
+    if (!res.ok) throw new Error('後端回應失敗');
+    const data = await res.json();
 
-  window.location.href = CHECKOUT_ENDPOINT + '?' + params.toString();
+    // 訂單已經記成待付款，這裡先清空購物車，避免使用者返回上一頁重複下單
+    saveCart([]);
+
+    // 在這一頁自己組表單、自己送出 → POST 到綠界付款頁，不透過會被瀏覽器擋掉自動送出的中介頁面
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = data.serviceURL;
+    Object.keys(data.params).forEach(key => {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = key;
+      input.value = data.params[key];
+      form.appendChild(input);
+    });
+    document.body.appendChild(form);
+    form.submit();
+  } catch (err) {
+    alert('建立訂單失敗，請稍後再試一次（' + err.message + '）');
+    btn.disabled = false;
+    btn.textContent = '確認送出訂單';
+  }
 }
 
 renderSummary();
