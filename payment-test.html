@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>付款測試（僅供除錯用）</title>
+<style>
+  body { font-family: sans-serif; max-width: 480px; margin: 40px auto; padding: 0 16px; }
+  button { padding: 14px 24px; font-size: 16px; background: #000; color: #fff; border: none; border-radius: 6px; }
+  #log { margin-top: 20px; font-size: 13px; color: #666; white-space: pre-wrap; word-break: break-all; }
+</style>
+</head>
+<body>
+<h2>付款測試（跳過選店，直接測試結帳）</h2>
+<p>這個頁面只是用來測試「目前 Script Properties 設定」能不能正常建立訂單，不會影響正式網站。</p>
+<button onclick="runTest()">送出一筆 100 元測試訂單</button>
+<div id="log"></div>
+
+<script>
+const CHECKOUT_ENDPOINT = 'https://script.google.com/macros/s/AKfycby91dA7yYelCc4BGH-rmkCVqaaHqfobY5lQuQ7cjOHVobjw0AJQhAhPxytt9klf330/exec';
+
+function log(msg) {
+  document.getElementById('log').textContent += msg + '\n';
+}
+
+function runTest() {
+  document.getElementById('log').textContent = '';
+  const orderId = 'TEST' + Date.now();
+  const params = new URLSearchParams({
+    orderId: orderId,
+    amount: '100',
+    itemName: '測試商品 x1',
+    description: '付款測試',
+    custName: '測試用戶',
+    custPhone: '0912345678',
+    custEmail: 'test@example.com',
+    custAddress: '測試地址',
+    shipMethod: 'cvs_711',
+    payMethod: 'ecpay',
+    cvsStoreID: '',
+    cvsStoreName: '',
+    cvsAddress: '',
+  });
+
+  const callbackName = 'testCb_' + Date.now();
+  window[callbackName] = function(result) {
+    log('收到後端回應：');
+    log(JSON.stringify(result, null, 2));
+    if (!result || !result.params) {
+      log('❌ 沒有拿到有效的付款參數，請檢查上面的回應內容');
+      return;
+    }
+    log('\n正在建立表單，準備送往：' + result.serviceURL);
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = result.serviceURL;
+    for (const key in result.params) {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = key;
+      input.value = result.params[key];
+      form.appendChild(input);
+    }
+    document.body.appendChild(form);
+    log('3 秒後自動送出表單...');
+    setTimeout(function() { form.submit(); }, 3000);
+  };
+
+  const script = document.createElement('script');
+  script.src = CHECKOUT_ENDPOINT + '?' + params.toString() + '&callback=' + callbackName;
+  script.onerror = function() { log('❌ 呼叫後端失敗（網路或網址問題）'); };
+  document.body.appendChild(script);
+  log('已送出測試訂單，等待回應...');
+}
+</script>
+</body>
+</html>
